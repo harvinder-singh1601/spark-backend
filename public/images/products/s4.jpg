@@ -1,0 +1,10 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#dbeafe"/>
+  <rect x="100" y="100" width="200" height="200" fill="#3b82f6" rx="10"/>
+  <text x="200" y="330" font-family="Arial" font-size="18" fill="#1e40af" text-anchor="middle">Product S4</text>
+</svg>
+
+
+
+
+
