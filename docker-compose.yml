@@ -1,0 +1,28 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: ${MONGODB_CONTAINER_NAME:-spark-mongodb}
+    restart: unless-stopped
+    ports:
+      - "${MONGODB_PORT:-27017}:27017"
+    command: mongod --replSet ${MONGODB_REPLICA_SET:-rs0}
+    environment:
+      - MONGO_INITDB_DATABASE=${MONGODB_DATABASE:-spark}
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - spark-network
+    healthcheck:
+      test: |
+        mongosh --eval "try { rs.status() } catch (err) { rs.initiate({_id:'${MONGODB_REPLICA_SET:-rs0}',members:[{_id:0,host:'${MONGODB_HOST:-localhost}:${MONGODB_PORT:-27017}'}]}) }" --quiet
+      interval: 5s
+      timeout: 10s
+      start_period: 10s
+      retries: 5
+
+volumes:
+  mongodb_data:
+
+networks:
+  spark-network:
+    driver: bridge

@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  fullname   String
+  email      String   @unique
+  password   String
+  createDate DateTime @default(now())
+  updateDate DateTime @updatedAt
+}
+
+model product {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  customer   String
+  quantity   String
+  status     String
+  price      String
+  imageUrl   String?
+  createDate DateTime @default(now())
+  updateDate DateTime @updatedAt
+}
+
+model blog {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  slug          String    @unique
+  content       String
+  excerpt       String?
+  author        String
+  featuredImage String?
+  tags          String[]
+  published     Boolean   @default(false)
+  publishedAt   DateTime?
+  views         Int       @default(0)
+  createDate    DateTime  @default(now())
+  updateDate    DateTime  @updatedAt
+}
+
+model location {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  shopName     String
+  banners      String[]
+  ownerName    String
+  ownerEmail   String
+  ownerPhone   String?
+  address      String
+  city         String
+  state        String?
+  zipCode      String?
+  country      String   @default("USA")
+  lat          Float
+  lng          Float
+  openingTimes Json // Store opening times as JSON: { monday: { open: "09:00", close: "18:00" }, ... }
+  status       String   @default("active") // active, inactive, closed
+  description  String?
+  posId        String?  // POS ID from spreadsheet
+  websiteUrl   String?  // Website URL from spreadsheet
+  createDate   DateTime @default(now())
+  updateDate   DateTime @updatedAt
+}
+
+model geoLocation {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  city         String
+  provinceAbbv String? // Province/State abbreviation (e.g., "CA", "NY", "ON")
+  slug         String?  // SEO-friendly URL slug (unique constraint will be added after data cleanup)
+  htmlContent  String? // HTML content for SEO page
+  images       String[] // Array of image URLs for the location page
+  // Legacy fields (deprecated - will be removed)
+  state        String?
+  zipCode      String?
+  country      String?
+  lat          Float?
+  lng          Float?
+  createDate   DateTime @default(now())
+  updateDate   DateTime @updatedAt
+}
